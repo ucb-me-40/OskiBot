@@ -2,6 +2,7 @@
 The purpose of this repo is to aid Cal students and instructors in the process of fine-tuning small language models.
 
 ## Directory
+```
 OskiBot/
 ├── data/
 │   ├── rag_corpus.txt             # Source text for RAG (Oski/Football facts)
@@ -11,6 +12,7 @@ OskiBot/
 │   ├── 2_fine_tune_phi3.py      # Performs LoRA fine-tuning
 │   └── 3_run_chatbot.py         # Main script: orchestrates RAG and the LLM
 └── README.md
+```
 
 ### data
 #### rag_corpus.txt
