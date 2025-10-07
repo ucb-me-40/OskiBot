@@ -428,3 +428,135 @@ if __name__ == "__main__":
             run_chat_loop(phi3_model, phi3_tokenizer, rag_retriever)
 
 ```
+
+---
+
+---
+
+## 4. Environment Setup (Ubuntu/NVIDIA Workstation)
+
+This project requires a specific environment to handle the large language model (Phi-3) and GPU acceleration. Follow these steps to ensure your Ubuntu workstation is configured correctly.
+
+### 4.1. System Prerequisites (HP Z4 G4 / RTX A4500)
+
+Getting the proprietary NVIDIA drivers and the CUDA Toolkit installed is often the trickiest part of setting up a deep learning environment.
+
+#### Step 1: Install Proprietary NVIDIA Drivers
+
+It is highly recommended to use the official Ubuntu repository tool (`ubuntu-drivers`) to install the correct proprietary driver for your RTX A4500. This handles kernel integration and dependency conflicts safely.
+
+1.  **Update and Install Utility:**
+    ```bash
+    sudo apt update
+    sudo apt install ubuntu-drivers-common
+    ```
+
+2.  **List Recommended Drivers:**
+    ```bash
+    ubuntu-drivers devices
+    ```
+    (Look for the driver version tagged `recommended` for your GPU.)
+
+3.  **Install Recommended Driver:**
+    ```bash
+    sudo ubuntu-drivers autoinstall
+    ```
+    *—OR—* install a specific version if needed (e.g., if the recommended is too new or old):
+    ```bash
+    # Example: Replace XXX with the version number you listed, e.g., 535
+    sudo apt install nvidia-driver-XXX 
+    ```
+
+4.  **Reboot and Verify:** Reboot the system to activate the new driver:
+    ```bash
+    sudo reboot
+    ```
+    After rebooting, open a terminal and verify the installation:
+    ```bash
+    nvidia-smi
+    ```
+    This command must run successfully and show your GPU and the installed driver version.
+
+#### Step 2: Install the CUDA Toolkit
+
+The CUDA Toolkit is the library that allows your code (like PyTorch) to communicate with the GPU driver. It must be installed *separately* from the driver.
+
+1.  **Check GCC:** Ensure the GCC compiler is installed, as it is a CUDA dependency:
+    ```bash
+    sudo apt install gcc
+    ```
+
+2.  **Download from NVIDIA:** **DO NOT** use `sudo apt install nvidia-cuda-toolkit`, as this often installs an old, incomplete version. Instead, navigate to the official [NVIDIA CUDA Toolkit Download Page](https://developer.nvidia.com/cuda-downloads).
+
+3.  **Select Your System:**
+    * Operating System: `Linux`
+    * Architecture: `x86_64`
+    * Distribution: `Ubuntu`
+    * Version: (Select your Ubuntu version, e.g., 22.04)
+    * Installer Type: `deb (network)` or `deb (local)`
+
+4.  **Execute Commands:** Follow the specific set of `wget`, `dpkg`, and `apt` commands provided by the NVIDIA website. These commands securely add the NVIDIA repository to your system and install the full toolkit package.
+
+5.  **Verify CUDA:** After installation, verify the CUDA Compiler version:
+    ```bash
+    nvcc --version
+    ```
+    This command must run successfully and show the CUDA Toolkit version.
+
+### 4.2. Python and Virtual Environment Setup
+
+It is critical to use a virtual environment to manage dependencies for this project.
+
+1.  **Install Python and Venv:** Ensure you have Python 3.10+ and the `venv` module installed:
+    ```bash
+    sudo apt update
+    sudo apt install python3 python3-venv
+    ```
+
+2.  **Create Virtual Environment:** Create the `llm_env` virtual environment in the root directory of your project:
+    ```bash
+    python3 -m venv llm_env
+    ```
+
+3.  **Activate Environment:** You must activate this environment in every new terminal session before running any script:
+    ```bash
+    source llm_env/bin/activate
+    ```
+
+4.  **Install Project Libraries:** Once the environment is active, run the consolidated installation command (from Section 1). The `pip install torch` will now correctly find and use the installed CUDA toolkit:
+    ```bash
+    # Core LLM, PEFT, and Fine-Tuning Libraries (requires torch/cuda support)
+    pip install torch transformers accelerate peft bitsandbytes trl datasets
+
+    # RAG and Vector Database Libraries
+    pip install langchain-community langchain-text-splitters sentence-transformers chromadb
+    ```
+
+### 4.3. Persistent Session for Fine-Tuning
+
+The fine-tuning process (`2_fine_tune_phi3.py`) can take several hours. If you are connecting remotely via SSH, your session will terminate if your connection drops, stopping the training.
+
+Use a terminal multiplexer like `tmux` to ensure the process continues running in the background.
+
+1.  **Install tmux:**
+    ```bash
+    sudo apt install tmux
+    ```
+
+2.  **Start a New Session:**
+    ```bash
+    tmux new -s training_session
+    ```
+
+3.  **Run Fine-Tuning:** Inside the new `tmux` window, activate your environment and start the fine-tuning script:
+    ```bash
+    source llm_env/bin/activate
+    python 2_fine_tune_phi3.py
+    ```
+
+4.  **Detach/Disconnect Safely:** Once the script is running, you can safely disconnect from your remote connection by detaching the session. Press **Ctrl+B**, then immediately press **D**. The process will continue running on the workstation.
+
+5.  **Re-attach Later:** To check the progress after reconnecting, simply run:
+    ```bash
+    tmux attach -t training_session
+    ```
