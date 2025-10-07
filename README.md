@@ -40,7 +40,9 @@ Conversational data for fine-tuning
 ```
 
 ### scripts
-#### create_rag_index.py    # Builds the vector database
+#### create_rag_index.py    
+Builds the vector database. 
+
 Install the following libraries:
 ```
 pip install langchain-community langchain-text-splitters sentence-transformers chromadb
@@ -142,7 +144,9 @@ The Stanford Axe is the trophy awarded to the winner of the annual "Big Game" ri
     create_vector_store(chunks, CHROMA_PERSIST_DIR)
 ```
 
-#### 2_fine_tune_phi3.py      # Performs LoRA fine-tuning
+#### 2_fine_tune_phi3.py      
+
+Performs LoRA fine-tuning
 
 Install these libraries:
 ```
@@ -283,7 +287,9 @@ print(f"✅ LoRA adapter weights saved to {LORA_ADAPTER_DIR}")
 print(f"The fine-tuned model is ready to be used in '3_run_chatbot.py'!")
 ```
 
-#### 3_run_chatbot.py         # Main script: orchestrates RAG and the LLM
+#### 3_run_chatbot.py         
+
+Main script: orchestrates RAG and the LLM
 
 ``` python
 import torch
