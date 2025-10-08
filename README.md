@@ -20,7 +20,7 @@ OskiBot: The Stanford Axe is a prestigious trophy that is awarded to the victor 
 ```
 OskiBot/
 ├── data/
-│   ├── rag_corpus.txt             # Source text for RAG (Oski/Football facts)
+│   ├── rag_corpus.txt             # Source text for RAG (Oski/Calgorithm/Football facts)
 │   └── fine_tune_conversations.jsonl # Conversational data for fine-tuning
 ├── scripts/
 │   ├── 1_create_rag_index.py    # Builds the vector database
