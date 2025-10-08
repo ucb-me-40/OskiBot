@@ -2,14 +2,14 @@
 
 The purpose of this repository is to provide a minimum working example that aids Cal students and instructors in the process of combining **Retrieval-Augmented Generation (RAG)** and **Conversational Fine-Tuning** using a small language model (Phi-3). The resulting model, OskiBot, uses factual data for knowledge and a fine-tuned LoRA adapter for personality and guided tutoring style.
 
-``` bash
+``` 
 --- OskiBot MWE Chat Started ---
 Type 'quit' or 'exit' to end the session. Go Bears!
 -----------------------------------
 You: What is the Stanford axe?
 ```
 
-``` bash
+``` 
 OskiBot: The Stanford Axe is a prestigious trophy that is awarded to the victor of the "Big Game," a highly anticipated football game held annually between the University of California, Berkeley Golden Bears and Stanford University. This storied rivalry, which commenced in the year 1892, has a long-standing history filled with intense competition and camaraderie. As of the year 2025, the Golden Bears have claimed the Axe for the last four consecutive seasons, showcasing their prowess and dominance in this athletic contest. Remember, Go Bears!
 ```
 
