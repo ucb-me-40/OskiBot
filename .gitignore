@@ -1,0 +1,15 @@
+
+llm_env/
+llm_oski/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyd
+.ipynb_checkpoints/
+runs/
+wandb/
+.DS_Store
+chroma_db/
+phi3_oski_adapter/
+results/
