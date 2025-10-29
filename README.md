@@ -39,6 +39,122 @@ OskiBot/
 You need a machine with a **GPU** (e.g., NVIDIA) to run the Phi-3 model and the fine-tuning script efficiently.
 
 ### Install Libraries
+Install a virtual python environment:
+``` bash
+sudo apt update
+sudo apt install python3-venv
+```
+```bash
+# Navigate to your preferred projects directory
+# cd ~/Projects 
+
+# Create the environment
+python3 -m venv phi3_env
+```
+
+Activate your environment:
+```bash
+source phi3_env/bin/activate
+```
+
+```bash
+sudo apt update
+sudo apt install ubuntu-drivers-common
+```
+
+```bash
+ubuntu-drivers devices
+```
+
+The crucial information you need is the recommended driver:
+```
+nvidia : driver-driver-580-open - distro non-free recommended
+```
+
+```bash
+sudo ubuntu-drivers autoinstall
+```
+
+```bash
+sudo reboot
+```
+
+```bash
+nvidia-smi
+```
+
+Exit the virtual environment:
+```bash
+exit
+```
+Check the settings on NVIDIA's website for what to do next. See also below for more details. Here is what NVIDIA told me to run:
+```bash
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+
+sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+
+wget https://developer.download.nvidia.com/compute/cuda/13.0.2/local_installers/cuda-repo-ubuntu2404-13-0-local_13.0.2-580.95.05-1_amd64.deb
+
+sudo dpkg -i cuda-repo-ubuntu2404-13-0-local_13.0.2-580.95.05-1_amd64.deb
+
+sudo cp /var/cuda-repo-ubuntu2404-13-0-local/cuda-*-keyring.gpg /usr/share/keyrings/
+
+sudo apt-get update
+
+sudo apt-get -y install cuda-toolkit-13-0
+```
+
+```bash
+sudo reboot
+```
+
+```bash
+# Verify the new driver version (should be 580.x)
+nvidia-smi
+
+# Verify the CUDA compiler toolkit is recognized (should be 13.0)
+nvcc --version
+```
+
+```bash
+echo 'export PATH=/usr/local/cuda-13.0/bin${PATH:+:${PATH}}' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda-13.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}' >> ~/.bashrc
+```
+
+```bash
+source ~/.bashrc
+```
+
+```bash
+cd ~/Projects/
+```
+
+```bash
+source phi3_env/bin/activate
+```
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+
+```bash
+pip install transformers accelerate peft bitsandbytes trl datasets langchain-community langchain-text-splitters sentence-transformers chromadb langchain
+```
+
+The most critical check for an LLM environment is to ensure PyTorch can see your GPU and use the CUDA libraries.
+
+Please try running the following commands in your activated environment:
+```bash
+python -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device name: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
+```
+
+```bash
+python -c "import torch; print(f'GPUs found: {torch.cuda.device_count()}')"
+```
+
+```bash
+python -c "import torch; print(torch.cuda.get_device_properties(0))"
+```
 
 Install all necessary Python libraries in a single step:
 
@@ -91,7 +207,8 @@ Run the scripts in the order listed below.
 import os
 from pathlib import Path
 from langchain_community.document_loaders import TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+#from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
